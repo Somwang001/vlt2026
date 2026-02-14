@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ดอกไม้สำหรับคุณ</title>
+    <!-- เรียกใช้ Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS สำหรับวาดดอกไม้และ Animation */
+        
+        /* Animation การบานของดอกไม้ */
+        @keyframes bloom {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Animation การลอยตัวเบาๆ ของช่อดอกไม้ */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Animation กลีบดอกไม้ร่วง */
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px) rotate(360deg); opacity: 0; }
+        }
+
+        .bouquet-container {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* การวาดดอกไม้ด้วย CSS (CSS Art) */
+        .flower {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* เริ่มต้นซ่อนไว้ก่อน */
+            transform: scale(0); 
+        }
+
+        /* กลีบดอกไม้ */
+        .petal {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to top, #ff9a9e, #fecfef, #fff0f5);
+            border-radius: 2px 40px;
+            opacity: 0.9;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* เกสรตรงกลาง */
+        .center {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle at 30% 30%, #fff59d, #fbc02d);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        /* ก้านดอกไม้ */
+        .stem {
+            position: absolute;
+            width: 6px;
+            height: 120px;
+            background: #4caf50;
+            top: 60px;
+            z-index: -1;
+            border-radius: 4px;
+        }
+
+        /* ใบไม้ */
+        .leaf {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background: #4caf50;
+            border-radius: 0 30px;
+            z-index: -1;
+        }
+
+        /* Class สำหรับสั่งให้ดอกไม้บาน */
+        .blooming {
+            animation: bloom 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* ปรับแต่งตำแหน่งกลีบดอกไม้แต่ละกลีบ */
+        .petal:nth-child(1) { transform: rotate(0deg) translateY(-15px); }
+        .petal:nth-child(2) { transform: rotate(72deg) translateY(-15px); }
+        .petal:nth-child(3) { transform: rotate(144deg) translateY(-15px); }
+        .petal:nth-child(4) { transform: rotate(216deg) translateY(-15px); }
+        .petal:nth-child(5) { transform: rotate(288deg) translateY(-15px); }
+
+        /* ดอกไม้รอง (สีต่างกัน) */
+        .flower-secondary .petal {
+            background: linear-gradient(to top, #a18cd1, #fbc2eb);
+            width: 30px;
+            height: 30px;
+        }
+        .flower-secondary { width: 60px; height: 60px; }
+
+        /* ดอกไม้สีส้ม (เพิ่มความหลากหลาย) */
+        .flower-orange .petal {
+            background: linear-gradient(to top, #f6d365, #fda085, #fff3e0);
+        }
+        .flower-orange .center {
+            background: #ff5722;
+        }
+
+        /* กลีบดอกไม้ที่โปรยลงมา */
+        .falling-petal {
+            position: fixed;
+            top: -10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 2px 15px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Animation ตัวหนังสือเด้งทีละตัว */
+        @keyframes letter-pop {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            animation: letter-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* พื้นหลังแบบเคลื่อนไหว */
+        @keyframes animated-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .beautiful-bg {
+            background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #fccb90, #ff9a9e);
+            background-size: 400% 400%;
+            animation: animated-gradient 15s ease infinite;
+        }
+
+        /* กระดาษห่อด้านหน้า (เพิ่มมิติให้เหมือนสอดอยู่ข้างใน) */
+        .bouquet-wrapper-front {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 160px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(248,187,208,0.8));
+            border-top: 1px solid rgba(255,255,255,0.8);
+            clip-path: polygon(10% 15%, 90% 15%, 50% 100%);
+            z-index: 25; /* บังโคนก้านดอกไม้แถวหลังและกลาง */
+        }
+        
+        /* แสงออร่าวิ้งๆ */
+        .aura {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(20px);
+            animation: pulse-aura 3s infinite ease-in-out;
+        }
+        @keyframes pulse-aura {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* ประกายวิ้งๆ */
+        .sparkle {
+            position: absolute;
+            background: white;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 2s infinite ease-in-out;
+            z-index: 60;
+            box-shadow: 0 0 10px #fff;
+        }
+        @keyframes twinkle {
+            0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1) rotate(180deg); opacity: 1; }
+        }
+
+        /* โบว์อิโมจิ */
+        .emoji-bow {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            z-index: 40;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        /* Kiss Effect */
+        .kiss {
+            position: absolute;
+            font-size: 3rem;
+            z-index: 100;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+        @keyframes float-kiss {
+            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+            20% { transform: scale(1.5) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1) rotate(15deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col justify-center items-center bg-gray-100 transition-colors duration-1000 overflow-hidden relative" id="main-body">
+
+    <!-- ปุ่มกด -->
+    <button id="gift-btn" class="z-20 px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xl font-bold rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-bounce">
+        🎁 กดรับดอกไม้ จากอาหวัง
+    </button>
+
+    <!-- พื้นที่แสดงช่อดอกไม้ (ซ่อนไว้ตอนแรก) -->
+    <div id="bouquet" class="hidden relative z-10 bouquet-container flex justify-center items-end h-80 w-full max-w-md mx-auto">
+        
+        <!-- แสงออร่าและประกาย -->
+        <div class="aura"></div>
+        <div class="sparkle w-8 h-8 -top-10 left-0 bg-yellow-100" style="animation-delay: 0.2s;"></div>
+        <div class="sparkle w-6 h-6 top-10 -right-10 bg-white" style="animation-delay: 0.5s;"></div>
+        <div class="sparkle w-4 h-4 bottom-40 -left-12 bg-pink-100" style="animation-delay: 0.8s;"></div>
+        <div class="sparkle w-5 h-5 bottom-60 right-0 bg-white" style="animation-delay: 1.2s;"></div>
+        
+        <!-- กระดาษห่อและโบว์ -->
+        <div class="bouquet-wrapper"></div>
+        <div class="bouquet-wrapper-front"></div>
+        <div class="emoji-bow">🎀</div>
+        
+        <!-- ดอกไม้แถวหลัง (Back Row) - เบลอนิดๆ ให้ดูไกลออกไป -->
+        <div class="flower flower-secondary absolute left-1/2 -ml-[60px] bottom-32 scale-75 blur-[1px]" style="animation-delay: 0.1s; z-index: 1;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 60px; transform: rotate(-10deg);"></div>
+        </div>
+
+        <div class="flower flower-orange absolute left-1/2 -ml-[20px] bottom-32 scale-75 blur-[1px]" style="animation-delay: 0.3s; z-index: 1;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 60px; transform: rotate(10deg);"></div>
+        </div>
+
+        <!-- ดอกไม้แถวกลาง (Middle Row) -->
+        <div class="flower flower-orange absolute left-1/2 -ml-[70px] bottom-28" style="animation-delay: 0.2s; z-index: 10;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 100px; transform: rotate(-20deg);"></div>
+            <div class="leaf" style="top: 80px; left: -10px; transform: rotate(-45deg);"></div>
+        </div>
+
+        <div class="flower flower-secondary absolute left-1/2 -ml-[10px] bottom-28" style="animation-delay: 0.4s; z-index: 10;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 100px; transform: rotate(20deg);"></div>
+            <div class="leaf" style="top: 80px; left: 10px; transform: rotate(45deg);"></div>
+        </div>
+
+        <!-- ดอกไม้หลัก (Main Center) - เพิ่มกลีบชั้นในให้ดูแน่นขึ้น -->
+        <div class="flower absolute left-1/2 -ml-[40px] bottom-32 z-20 scale-110" style="animation-delay: 0s;">
+            <!-- กลีบชั้นใน (Inner Petals) -->
+            <div class="petal" style="transform: rotate(36deg) translateY(-10px) scale(0.8); opacity: 1; z-index: 5;"></div>
+            <div class="petal" style="transform: rotate(108deg) translateY(-10px) scale(0.8); opacity: 1; z-index: 5;"></div>
+            <div class="petal" style="transform: rotate(180deg) translateY(-10px) scale(0.8); opacity: 1; z-index: 5;"></div>
+            <div class="petal" style="transform: rotate(252deg) translateY(-10px) scale(0.8); opacity: 1; z-index: 5;"></div>
+            <div class="petal" style="transform: rotate(324deg) translateY(-10px) scale(0.8); opacity: 1; z-index: 5;"></div>
+            
+            <!-- กลีบปกติ -->
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center" style="z-index: 20;"></div>
+            <div class="stem" style="height: 140px;"></div>
+            <div class="leaf" style="top: 110px; left: 15px; transform: rotate(45deg);"></div>
+            <div class="leaf" style="top: 120px; left: -20px; transform: rotate(-45deg);"></div>
+        </div>
+
+        <!-- ดอกไม้เล็กด้านหน้า (Front Low) -->
+        <div class="flower flower-secondary absolute left-1/2 -ml-[50px] bottom-24 scale-75" style="animation-delay: 0.5s; z-index: 24;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 60px; transform: rotate(-10deg);"></div>
+        </div>
+
+        <div class="flower flower-orange absolute left-1/2 -ml-[30px] bottom-24 scale-75" style="animation-delay: 0.6s; z-index: 24;">
+            <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem" style="height: 60px; transform: rotate(10deg);"></div>
+        </div>
+
+        <!-- ข้อความอวยพร -->
+        <div class="absolute -bottom-16 text-center w-full" id="greeting-text">
+            <h1 class="text-3xl font-bold text-rose-600 drop-shadow-md" style="text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">❤️</h1>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('gift-btn');
+        const bouquet = document.getElementById('bouquet');
+        const body = document.getElementById('main-body');
+        const greeting = document.getElementById('greeting-text');
+        const flowers = document.querySelectorAll('.flower');
+
+        btn.addEventListener('click', () => {
+            // 1. ซ่อนปุ่ม
+            btn.style.transition = "opacity 0.5s, transform 0.5s";
+            btn.style.opacity = "0";
+            btn.style.transform = "scale(0)";
+            
+            setTimeout(() => {
+                btn.style.display = 'none';
+                
+                // 2. แสดงช่อดอกไม้
+                bouquet.classList.remove('hidden');
+                
+                // เริ่ม Animation การบาน (Blooming)
+                flowers.forEach(flower => {
+                    flower.classList.add('blooming');
+                });
+
+                // แสดงเอฟเฟกต์จูบ
+                showKissEffect();
+
+                // แสดงข้อความแบบเรียงตัวอักษร
+                const h1 = greeting.querySelector('h1');
+                const text = h1.innerText;
+                h1.innerHTML = ''; // ล้างข้อความเดิม
+                [...text].forEach((char, i) => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.className = 'letter';
+                    span.style.animationDelay = `${1 + (i * 0.05)}s`; // เริ่มแสดงหลังจากดอกไม้บาน 1 วินาที
+                    h1.appendChild(span);
+                });
+            }, 500);
+
+            // 3. เปลี่ยนสีพื้นหลัง (Pastel Pink)
+            body.classList.remove('bg-gray-100');
+            body.classList.add('beautiful-bg');
+            
+            // 5. เริ่มเอฟเฟกต์โปรยกลีบดอกไม้
+            startFallingPetals();
+        });
+
+        function startFallingPetals() {
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.classList.add('falling-petal');
+                
+                // สุ่มตำแหน่งเริ่มต้น (ซ้าย-ขวา)
+                petal.style.left = Math.random() * 100 + 'vw';
+                
+                // สุ่มสีเล็กน้อย
+                const colors = ['#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb', '#a6c1ee', '#fccb90'];
+                petal.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // สุ่มความเร็วในการตก
+                const duration = Math.random() * 3 + 2 + 's'; // 2-5 วินาที
+                petal.style.animation = `fall ${duration} linear forwards`;
+                
+                body.appendChild(petal);
+
+                // ลบ Element เมื่อตกถึงพื้นเพื่อไม่ให้หนักเครื่อง
+                setTimeout(() => {
+                    petal.remove();
+                }, 5000); 
+            }, 300); // สร้างกลีบใหม่ทุกๆ 300ms
+        }
+
+        function showKissEffect() {
+            const bouquet = document.getElementById('bouquet');
+            // สร้างรอยจูบ 5 อัน
+            for(let i=0; i<5; i++) {
+                setTimeout(() => {
+                    const kiss = document.createElement('div');
+                    kiss.textContent = '💋';
+                    kiss.classList.add('kiss');
+                    kiss.style.left = (50 + (Math.random() * 40 - 20)) + '%'; // สุ่มตำแหน่งซ้าย-ขวา
+                    kiss.style.bottom = (120 + (Math.random() * 50)) + 'px'; // เริ่มต้นแถวๆ ดอกไม้
+                    kiss.style.animation = `float-kiss 2s ease-out forwards`;
+                    bouquet.appendChild(kiss);
+                    setTimeout(() => kiss.remove(), 2000);
+                }, i * 400);
+            }
+        }
+    </script>
+</body>
+</html>
